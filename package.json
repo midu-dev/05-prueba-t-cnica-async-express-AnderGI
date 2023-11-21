@@ -1,0 +1,17 @@
+{
+  "name": "prueba-tecnica-javascript-node",
+  "type": "module",
+  "scripts": {
+		"lint": "standard",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "supertest": "6.3.3",
+		"standard": "17.1.0"
+  },
+  "dependencies": {
+  },
+	"eslintConfig": {
+		"extends": "standard"
+	}
+}
