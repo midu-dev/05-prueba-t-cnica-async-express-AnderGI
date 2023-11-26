@@ -105,27 +105,27 @@ Arregla los tests si es necesario:
 // Para evitar bloquear el hilo de ejecución principal
 // En este caso se podria llegar utilizar el método Promise.all
 // para que las tareas se realizen de manera concurrente
-/*
+
 export async function leerArchivos() {
   try {
-    const archivos = Promise.all([
-      fsP.readSync("archivo1.txt", "utf8"),
-      fsP.readSync("archivo2.txt", "utf8"),
-      fsP.readSync("archivo3.txt", "utf8"),
+    const archivos = await Promise.all([
+      fsP.readFile("archivo1.txt", "utf8"),
+      fsP.readFile("archivo2.txt", "utf8"),
+      fsP.readFile("archivo3.txt", "utf8"),
     ]);
     const resultMssg = archivos.reduce(
-      (acc, current) => (acc += ` ${current}`),
-      ""
+      (acc, current) => (acc += " " + current)
     );
     console.log(resultMssg);
+    return resultMssg;
   } catch (err) {
     console.log(err);
   }
 }
-*/
-/*
+
 // # EJERCICIO 5
-export async function delay() {
-  // ...
+export async function delay(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => resolve("Resuelta"), ms);
+  });
 }
-*/

@@ -3,7 +3,7 @@ import {
   obtenerDatosPromise,
   procesarArchivoPromise,
   procesarArchivo,
-  //leerArchivos,
+  leerArchivos,
 } from "../solutions/index.js";
 
 import { describe, it, beforeEach, afterEach } from "node:test";
@@ -54,12 +54,9 @@ describe("3. procesarArchivoPromise", () => {
   });
 });
 
-/*
-
 describe("4. leerArchivos", () => {
   it("4.1. leerArchivos", async () => {
     const mensaje = await leerArchivos();
     equal(mensaje, "hola qué tal");
   });
 });
-*/
