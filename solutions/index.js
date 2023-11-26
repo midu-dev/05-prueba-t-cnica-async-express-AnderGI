@@ -30,7 +30,7 @@ ping("midu.dev", (err, info) => {
 });
 
 // # EJERCICIO 2
-export function obtenerDatosPromise(callback) {
+export function obtenerDatosPromise() {
   return new Promise((resolve, reject) => {
     setTimeout(resolve({ data: "datos importantes" }), 2000);
   });
@@ -51,24 +51,24 @@ const gestionarErrores = (error, estaLeyendo) => {
 // Para luego escribirlo en un archivo output.txt (que se crea si no existe)
 // Tanto en la lectura como escritura se gestionan los errores
 // Devolviendo un mensaje por consola y un error con el error del proceso
-export async function procesarArchivo() {
+export function procesarArchivo(cb) {
   let textoProcesado;
   fs.readFile("input.txt", "utf8", (error, contenido) => {
     if (error) {
-      gestionarErrores(error, true);
+      cb(gestionarErrores(error, true));
     }
 
     // El set timeout puede sobrar porque no es necesario añadir a un proceso asincrono mas latencia
     textoProcesado = contenido.toUpperCase();
     fs.writeFile("output.txt", textoProcesado, (error) => {
       if (error) {
-        gestionarErrores(error, false);
+        cb(gestionarErrores(error, false));
       }
     });
 
     // Aqui ya habra escrito y no habra errores pro tanto se puede sacar del if
     console.log("Archivo procesado y guardado con éxito");
-    return contenido;
+    return cb(null, contenido);
   });
 }
 
@@ -95,16 +95,35 @@ export async function procesarArchivoPromise() {
   }
 }
 
-/*
 // # EJERCICIO 4
-export function leerArchivos() {
-  const archivo1 = fs.readSync("archivo1.txt", "utf8");
-  const archivo2 = fs.readSync("archivo2.txt", "utf8");
-  const archivo3 = fs.readSync("archivo3.txt", "utf8");
+/*
+¿Cómo mejorarías el siguiente código y por qué? 
+Arregla los tests si es necesario:
+*/
 
-  return `${archivo1} ${archivo2} ${archivo3}`;
+// Lo arreglaria cambiando las funciones sincronas por asincronas
+// Para evitar bloquear el hilo de ejecución principal
+// En este caso se podria llegar utilizar el método Promise.all
+// para que las tareas se realizen de manera concurrente
+/*
+export async function leerArchivos() {
+  try {
+    const archivos = Promise.all([
+      fsP.readSync("archivo1.txt", "utf8"),
+      fsP.readSync("archivo2.txt", "utf8"),
+      fsP.readSync("archivo3.txt", "utf8"),
+    ]);
+    const resultMssg = archivos.reduce(
+      (acc, current) => (acc += ` ${current}`),
+      ""
+    );
+    console.log(resultMssg);
+  } catch (err) {
+    console.log(err);
+  }
 }
-
+*/
+/*
 // # EJERCICIO 5
 export async function delay() {
   // ...

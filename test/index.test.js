@@ -53,7 +53,9 @@ describe("3. procesarArchivoPromise", () => {
     equal(contenido, "HOLA");
   });
 });
+
 /*
+
 describe("4. leerArchivos", () => {
   it("4.1. leerArchivos", async () => {
     const mensaje = await leerArchivos();
