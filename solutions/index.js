@@ -14,13 +14,11 @@ export const ping = (ip, cb) => {
     client.end();
     const result = { time: process.hrtime(startTime), ip };
     // Se supone que no hay errores
-    // ¿El return aquí sobraria porque la funcion es asincrona y su
-    // valor no es capturado por ningun código sincrono?
-    cb(null, result);
+    return cb(null, result);
   });
 
   client.on("error", (err) => {
-    cb(err, null);
+    return cb(err, null);
   });
 };
 
@@ -55,14 +53,14 @@ export function procesarArchivo(cb) {
   let textoProcesado;
   fs.readFile("input.txt", "utf8", (error, contenido) => {
     if (error) {
-      cb(gestionarErrores(error, true));
+      cb(gestionarErrores(error, true), null);
     }
 
     // El set timeout puede sobrar porque no es necesario añadir a un proceso asincrono mas latencia
     textoProcesado = contenido.toUpperCase();
     fs.writeFile("output.txt", textoProcesado, (error) => {
       if (error) {
-        cb(gestionarErrores(error, false));
+        cb(gestionarErrores(error, false), null);
       }
     });
 
@@ -96,27 +94,23 @@ export async function procesarArchivoPromise() {
 }
 
 // # EJERCICIO 4
-/*
-¿Cómo mejorarías el siguiente código y por qué? 
-Arregla los tests si es necesario:
-*/
 
 // Lo arreglaria cambiando las funciones sincronas por asincronas
 // Para evitar bloquear el hilo de ejecución principal
-// En este caso se podria llegar utilizar el método Promise.all
+// En este caso se podria llegar utilizar el método Promise.allSettled
 // para que las tareas se realizen de manera concurrente
+// y devuelvan bien un array de las promesas con el resultado o el error
+// pero no se rechaza si una de las promesxas falla
 
 export async function leerArchivos() {
   try {
-    const archivos = await Promise.all([
+    const archivos = await Promise.allSettled([
       fsP.readFile("archivo1.txt", "utf8"),
       fsP.readFile("archivo2.txt", "utf8"),
       fsP.readFile("archivo3.txt", "utf8"),
     ]);
-    const resultMssg = archivos.reduce(
-      (acc, current) => (acc += " " + current)
-    );
-    console.log(resultMssg);
+    const resultMssg = archivos.map((promise) => promise.value).join(" ");
+
     return resultMssg;
   } catch (err) {
     console.log(err);
