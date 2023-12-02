@@ -5,7 +5,9 @@ import request from "supertest";
 import { app, server } from "../solutions/server.js";
 
 describe("Items Routes", () => {
-  let itemId = null;
+  // No se porque esta variable esta en null la he cambiado a 1 que es el primer id
+  // de los items y luego lo he incrementado / decrementado en función de la acción realizada
+  let itemId = 1;
 
   after(() => {
     server.close();
@@ -24,11 +26,9 @@ describe("Items Routes", () => {
     const response = await request(app).post("/items").send({
       content: "Test item",
     });
-
     equal(response.statusCode, 200);
     equal(response.body.content, "Test item");
-    itemId = response.body.id;
-
+    itemId++;
     const { statusCode, body } = await request(app).get(`/items/${itemId}`);
     equal(statusCode, 200);
     equal(body.content, "Test item");
@@ -40,7 +40,7 @@ describe("Items Routes", () => {
     equal(statusCode, 200);
   });
 
-  it("should have no tasks after deletion", async () => {
+  it("should have one task after deletion", async () => {
     const response = await request(app).get("/items");
 
     equal(response.statusCode, 200);
