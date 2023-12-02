@@ -1,0 +1,35 @@
+### GET all items
+GET http://localhost:3000/items
+
+### GET Item based on id
+GET http://localhost:3000/items/2
+
+### POST para añadir 
+POST http://localhost:3000/items
+Content-Type: application/json
+
+{
+    "content": "New Item"
+}
+
+
+### POST para añadir con errores
+POST http://localhost:3000/items
+Content-Type: application/json
+
+{
+    
+}
+
+
+### DELETE para eliminar items en este caso primer item.
+DELETE http://localhost:3000/items/2
+
+
+### PATCH para actualizar una parte 
+PATCH http://localhost:3000/items/2
+Content-Type: application/json
+
+{
+    "content":"UPDATED Item 2"
+}
