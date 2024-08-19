@@ -1,54 +1,54 @@
-import { describe, it, after } from 'node:test'
-import { equal, deepStrictEqual } from 'node:assert/strict'
-import request from 'supertest'
+import { describe, it, after } from "node:test";
+import { equal, deepStrictEqual } from "node:assert/strict";
+import request from "supertest";
 
-import { app, server } from '../solutions/server.js'
+import { app, server } from "../solutions/server.js";
 
-describe('Items Routes', () => {
-  let itemId = null
+describe("Items Routes", () => {
+  // No se porque esta variable esta en null la he cambiado a 1 que es el primer id
+  // de los items y luego lo he incrementado / decrementado en función de la acción realizada
+  let itemId = 1;
 
   after(() => {
-    server.close()
-  })
+    server.close();
+  });
 
-  it('should fetch all tasks', async () => {
-    const response = await request(app).get('/items')
+  it("should fetch all tasks", async () => {
+    const response = await request(app).get("/items");
 
-    equal(response.statusCode, 200)
-    equal(Array.isArray(response.body), true)
-    equal(response.body.length, 1)
-    equal(response.body[0].content, 'Item 1')
-  })
+    equal(response.statusCode, 200);
+    equal(Array.isArray(response.body), true);
+    equal(response.body.length, 1);
+    equal(response.body[0].content, "Item 1");
+  });
 
-  it('should add a new item', async () => {
-    const response = await request(app)
-      .post('/items')
-      .send({
-        content: 'Test item'
-      })
+  it("should add a new item", async () => {
+    const response = await request(app).post("/items").send({
+      content: "Test item",
+    });
+    equal(response.statusCode, 200);
+    equal(response.body.content, "Test item");
+    itemId++;
+    const { statusCode, body } = await request(app).get(`/items/${itemId}`);
+    equal(statusCode, 200);
+    equal(body.content, "Test item");
+    equal(body.id, itemId);
+  });
 
-    equal(response.statusCode, 200)
-    equal(response.body.content, 'Test item')
-    itemId = response.body.id
+  it("should delete a task", async () => {
+    const { statusCode } = await request(app).delete(`/items/${itemId}`);
+    equal(statusCode, 200);
+  });
 
-    const { statusCode, body } = await request(app).get(`/items/${itemId}`)
-    equal(statusCode, 200)
-    equal(body.content, 'Test item')
-    equal(body.id, itemId)
-  })
+  it("should have one task after deletion", async () => {
+    const response = await request(app).get("/items");
 
-  it('should delete a task', async () => {
-    const { statusCode } = await request(app).delete(`/items/${itemId}`)
-    equal(statusCode, 200)
-  })
-
-  it('should have no tasks after deletion', async () => {
-    const response = await request(app).get('/items')
-
-    equal(response.statusCode, 200)
-    deepStrictEqual(response.body, [{
-      id: 1,
-      content: 'Item 1'
-    }])
-  })
-})
+    equal(response.statusCode, 200);
+    deepStrictEqual(response.body, [
+      {
+        id: 1,
+        content: "Item 1",
+      },
+    ]);
+  });
+});

@@ -1,13 +1,11 @@
-import express from 'express'
-
-export const app = express()
-app.use(express.json())
-
-const items = [{
-  id: 1,
-  content: 'Item 1'
-}]
-
+/* eslint-disable quotes */
+import express from "express";
+import { itemsRouter } from "./Routes/itemsRoutes.js";
+export const app = express();
+app.use(express.json());
+app.use(itemsRouter);
 // EJERCICO 6 aquí
-
-export const server = app.listen(3000)
+const PORT = process.env.PORT || 3000;
+export const server = app.listen(PORT, () => {
+  console.log(`Server listening at ${PORT}`);
+});
